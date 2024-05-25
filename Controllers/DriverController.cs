@@ -2,6 +2,8 @@
 using AnasProject.Repos;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 
@@ -18,51 +20,67 @@ namespace AnasProject.Controllers
             this.driverRepo = driverRepo;
         }
 
-        [HttpPost]
-        public IActionResult Create(DriverDto driverDto)
+        
+        [HttpPost("add")]
+        public async Task<IActionResult> AddDriver([FromBody] DriverDto driverDTO)
         {
             if (ModelState.IsValid)
             {
-                Driver driver = new Driver()
-                {
-                    DriverName = driverDto.DriverName,
-                    PhoneNumber = driverDto.PhoneNumber,
+                Driver driver= new Driver() { 
+                        DriverName = driverDTO.DriverName,  
+                        PhoneNumber = driverDTO.PhoneNumber,
                 };
+                // Add the driver to the database
                 driverRepo.Insert(driver);
                 driverRepo.Save();
 
-                // Prepare GVAR response
-                var gvarResponse = new GVAR();
-                gvarResponse.DicOfDic["DriverInfo"] = new Dictionary<string, string>();
-                gvarResponse.DicOfDic["DriverInfo"]["DriverId"] = driver.DriverId.ToString();
-                gvarResponse.DicOfDic["DriverInfo"]["DriverName"] = driver.DriverName;
-                gvarResponse.DicOfDic["DriverInfo"]["PhoneNumber"] = driver.PhoneNumber;
+                // Create a GVAR object and populate the DicOfDic with driver data
+                var gvar = new GVAR();
+                gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
+                {
+                    ["DriverID"] = driver.DriverId.ToString(),
+                    ["DriverName"] = driver.DriverName,
+                    ["PhoneNumber"] = driver.PhoneNumber.ToString()
+                };
 
-                return Ok(gvarResponse);
+                // Wrap the GVAR object into a response structure
+                var response = new
+                {
+                    gvar = gvar
+                };
+
+                // Return the wrapped response
+                return Ok(response);
             }
 
-            return BadRequest();
+            return BadRequest("Invalid Data For Adding This Driver");
+            
         }
-
-        [HttpGet]
-        public IActionResult GetAll()
+        // GET: api/drivers/all
+        [HttpGet("all")]
+        public async Task<IActionResult> GetAllDrivers()
         {
-            List<Driver> drivers = driverRepo.GetAll();
+            var drivers = driverRepo.GetAll();
+            var dataTable = new DataTable("Drivers");
+            dataTable.Columns.Add("DriverID", typeof(long));
+            dataTable.Columns.Add("DriverName", typeof(string));
+            dataTable.Columns.Add("PhoneNumber", typeof(long));
 
-            // Prepare GVAR response
-            var gvarResponse = new GVAR();
-            gvarResponse.DicOfDic["Drivers"] = new Dictionary<string, string>();
-
-            int index = 1;
             foreach (var driver in drivers)
             {
-                gvarResponse.DicOfDic["Drivers"][$"Driver{index}_Id"] = driver.DriverId.ToString();
-                gvarResponse.DicOfDic["Drivers"][$"Driver{index}_Name"] = driver.DriverName;
-                gvarResponse.DicOfDic["Drivers"][$"Driver{index}_PhoneNumber"] = driver.PhoneNumber;
-                index++;
+                dataTable.Rows.Add(driver.DriverId, driver.DriverName, driver.PhoneNumber);
             }
 
-            return Ok(gvarResponse);
+            var gvar = new GVAR();
+            gvar.AddDataTable("Drivers", dataTable);
+
+            // Wrap the GVAR object into a response structure
+            var response = new
+            {
+                gvar = gvar
+            };
+
+            return Ok(response);
         }
     }
 }
