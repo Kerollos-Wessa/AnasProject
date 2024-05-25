@@ -12,6 +12,8 @@ public partial class Vehicle
     public long? VehicleNumber { get; set; }
 
     public string? VehicleType { get; set; }
+    public bool IsDeleted { get; set; } = false;
+
 
     public virtual RouteHistory? RouteHistory { get; set; }
 

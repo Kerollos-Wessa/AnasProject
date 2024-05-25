@@ -13,6 +13,8 @@ public partial class Geofence
 
     public string? StrockColor { get; set; }
 
+    public bool IsDeleted { get; set; } = false;
+
     public float? StrockOpacity { get; set; }
 
     public float? StrockWeight { get; set; }

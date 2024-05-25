@@ -2,11 +2,11 @@
 
 namespace AnasProject.DTOS
 {
-    public class GVARDto
+    public class GVARDTO
     {
         public Dictionary<string, Dictionary<string, string>> DicOfDic { get; set; }
 
-        public GVARDto()
+        public GVARDTO()
         {
             DicOfDic = new Dictionary<string, Dictionary<string, string>>();
         }

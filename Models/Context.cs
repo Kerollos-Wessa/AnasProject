@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc.Formatters.Xml;
+using Microsoft.EntityFrameworkCore;
 
-namespace AnasProject.Controllers
+namespace AnasProject.Models
 {
     public class Context : DbContext
     {
@@ -20,7 +21,17 @@ namespace AnasProject.Controllers
 
         public virtual DbSet<Vehicle> Vehicles { get; set; }
 
-        public virtual DbSet<VehiclesInformation> VehiclesInformations{ get; set;}
+        public virtual DbSet<VehiclesInformation> VehiclesInformations { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //foreach(var type in modelBuilder.Model.GetEntityTypes())
+            //{
+            //    modelBuilder.Entity(type.Name).Property<bool>("IsDeleted");
+            //}
+            modelBuilder.Entity<Driver>().HasQueryFilter(e => !e.IsDeleted);
+
+        }
 
     }
 }

@@ -8,6 +8,7 @@ public partial class Driver
     public long DriverId { get; set; }
 
     public string? DriverName { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     public string? PhoneNumber { get; set; }
 
