@@ -1,4 +1,4 @@
-﻿using AnasProject.Controllers;
+﻿using AnasProject.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnasProject.Repos
@@ -10,11 +10,13 @@ namespace AnasProject.Repos
         {
             context = _context;
         }
-        public void Delete(int id)
+        public void Delete(long id)
         {
             T t = GetById(id);
+           
             Update(t);
         }
+
 
         public List<T> GetAll()
         {
@@ -23,7 +25,7 @@ namespace AnasProject.Repos
 
         }
 
-        public T GetById(int id)
+        public T GetById(long id)
         {
             return context.Set<T>().Find(id);
         }

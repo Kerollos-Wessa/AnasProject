@@ -10,6 +10,7 @@ public partial class PolygonGeofence
     public long? GeofenceId { get; set; }
 
     public float? Latitude { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     public float? Longitude { get; set; }
 

@@ -13,6 +13,8 @@ public partial class RectangleGeofence
 
     public float? East { get; set; }
 
+    public bool IsDeleted { get; set; } = false;
+
     public float? West { get; set; }
 
     public float? South { get; set; }

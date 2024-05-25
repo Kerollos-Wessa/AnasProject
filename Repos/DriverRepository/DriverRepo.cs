@@ -1,14 +1,16 @@
-﻿using AnasProject.Controllers;
+﻿using AnasProject.Models;
 
-namespace AnasProject.Repos
+namespace AnasProject.Repos.DriverRepository
 {
     public class DriverRepo : Repository<Driver>, IDriverRepo
     {
         Context context;
         public DriverRepo(Context _context) : base(_context)
         {
-            this.context = _context;
+            context = _context;
         }
+
+
 
     }
 }

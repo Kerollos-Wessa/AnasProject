@@ -2,7 +2,7 @@
 
 namespace AnasProject.DTOS
 {
-    public class DriverDto
+    public class DriverDTO
     {
         [Required]
         public string DriverName { get; set; }

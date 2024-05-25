@@ -1,6 +1,6 @@
-
-using AnasProject.Controllers;
-using AnasProject.Repos;
+using AnasProject.Models;
+using AnasProject.Repos.DriverRepository;
+using AnasProject.Repos.VehicleRepository;
 using Microsoft.EntityFrameworkCore;
 
 namespace AnasProject
@@ -24,7 +24,7 @@ namespace AnasProject
             });
 
             builder.Services.AddScoped<IDriverRepo, DriverRepo>();
-
+            builder.Services.AddScoped<IVehicleRepo, VehicleRepo>();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

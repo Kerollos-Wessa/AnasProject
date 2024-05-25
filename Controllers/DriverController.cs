@@ -1,5 +1,5 @@
 ﻿using AnasProject.DTOS;
-using AnasProject.Repos;
+using AnasProject.Repos.DriverRepository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +22,7 @@ namespace AnasProject.Controllers
 
         
         [HttpPost("add")]
-        public async Task<IActionResult> AddDriver([FromBody] DriverDto driverDTO)
+        public  IActionResult AddDriver([FromBody] DriverDTO driverDTO)
         {
             if (ModelState.IsValid)
             {
@@ -56,9 +56,81 @@ namespace AnasProject.Controllers
             return BadRequest("Invalid Data For Adding This Driver");
             
         }
+
+
+        [HttpPut("Update")]
+        public IActionResult UpdateDrivers(int driverId,DriverDTO driverDTO)
+        {
+            if (ModelState.IsValid)
+            {
+
+                Driver driver = driverRepo.GetById(driverId);
+             
+                driver.DriverName = driverDTO.DriverName;
+                driver.PhoneNumber = driverDTO.PhoneNumber;
+                    
+                    //DriverName = driverDTO.DriverName
+                    //PhoneNumber = driverDTO.PhoneNumber
+                
+                driverRepo.Update(driver);
+                driverRepo.Save();
+                var gvar = new GVAR();
+                gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
+                {
+                    ["DriverID"] = driver.DriverId.ToString(),
+                    ["DriverName"] = driver.DriverName,
+                    ["PhoneNumber"] = driver.PhoneNumber.ToString()
+                };
+                var response = new
+                {
+                    gvar = gvar
+                };
+
+                // Return the wrapped response
+                return Ok(response);
+            }
+
+            return BadRequest("Invalid Data For Adding This Driver");
+        }
+
+        [HttpDelete("Delete")]
+        public IActionResult DeleteDriver(long driverId)
+        {
+            if (ModelState.IsValid)
+            {
+                Driver driver = driverRepo.GetById(driverId);
+                //driver.DriverName = driverDTO.DriverName;
+                //driver.PhoneNumber = driverDTO.PhoneNumber;
+
+                driver.IsDeleted=true;
+                driverRepo.Update(driver);
+                driverRepo.Save();
+
+                var gvar = new GVAR();
+                gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
+                {
+                    ["DriverID"] = driver.DriverId.ToString(),
+                    ["DriverName"] = driver.DriverName,
+                    ["PhoneNumber"] = driver.PhoneNumber.ToString()
+                };
+                var response = new
+                {
+                    gvar = gvar
+                };
+
+                // Return the wrapped response
+                return Ok(response);
+            }
+
+            return BadRequest("Invalid Data For Adding This Driver");
+        
+        }
+        
+
+
         // GET: api/drivers/all
         [HttpGet("all")]
-        public async Task<IActionResult> GetAllDrivers()
+        public IActionResult GetAllDrivers()
         {
             var drivers = driverRepo.GetAll();
             var dataTable = new DataTable("Drivers");
@@ -82,5 +154,9 @@ namespace AnasProject.Controllers
 
             return Ok(response);
         }
+
+
+        
+
     }
 }

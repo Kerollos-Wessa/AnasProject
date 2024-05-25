@@ -14,6 +14,7 @@ public partial class RouteHistory
     public char? Status { get; set; }
 
     public string? VehicleSpeed { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     public long? Epoch { get; set; }
 
