@@ -103,6 +103,29 @@ namespace AnasProject.Controllers
                 vehicle.IsDeleted = true;
                 vehicleRepo.Update(vehicle);
                 vehicleRepo.Save();
+        
+
+                var gvar = new GVAR();
+                gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
+                {
+                    ["VehicleId"] = vehicle.VehicleId.ToString(),
+                    ["VehicleNumber"] = vehicle.VehicleNumber.ToString(),
+                    ["VehicleType"] = vehicle.VehicleType.ToString()
+                };
+                var response = new
+                {
+                    gvar = gvar
+                };
+
+                // Return the wrapped response
+                return Ok(response);
+            }
+
+            return BadRequest("Invalid Data For Adding This Driver");
+
+        }
+
+
         [HttpGet("all-vehicles")]
         public IActionResult GetAllVehicles()
         {
@@ -144,54 +167,34 @@ namespace AnasProject.Controllers
             return Ok(response);
         }
 
-                var gvar = new GVAR();
-                gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
-                {
-                    ["VehicleId"] = vehicle.VehicleId.ToString(),
-                    ["VehicleNumber"] = vehicle.VehicleNumber.ToString(),
-                    ["VehicleType"] = vehicle.VehicleType.ToString()
-                };
-                var response = new
-                {
-                    gvar = gvar
-                };
-
-                // Return the wrapped response
-                return Ok(response);
-            }
-
-            return BadRequest("Invalid Data For Adding This Driver");
-
-        }
-
 
 
         // GET: api/drivers/all
-        [HttpGet("all")]
-        public IActionResult GetAllDrivers()
-        {
-            var vehicles = vehicleRepo.GetAll();
-            var dataTable = new DataTable("Vehicles");
-            dataTable.Columns.Add("VehicleId", typeof(long));
-            dataTable.Columns.Add("VehicleNumber", typeof(long));
-            dataTable.Columns.Add("VehicleType", typeof(string));
+        //[HttpGet("all")]
+        //public IActionResult GetAllDrivers()
+        //{
+        //    var vehicles = vehicleRepo.GetAll();
+        //    var dataTable = new DataTable("Vehicles");
+        //    dataTable.Columns.Add("VehicleId", typeof(long));
+        //    dataTable.Columns.Add("VehicleNumber", typeof(long));
+        //    dataTable.Columns.Add("VehicleType", typeof(string));
 
-            foreach (var vehicle in vehicles)
-            {
-                dataTable.Rows.Add(vehicle.VehicleId, vehicle.VehicleNumber, vehicle.VehicleType);
-            }
+        //    foreach (var vehicle in vehicles)
+        //    {
+        //        dataTable.Rows.Add(vehicle.VehicleId, vehicle.VehicleNumber, vehicle.VehicleType);
+        //    }
 
-            var gvar = new GVAR();
-            gvar.AddDataTable("Vehicles", dataTable);
+        //    var gvar = new GVAR();
+        //    gvar.AddDataTable("Vehicles", dataTable);
 
-            // Wrap the GVAR object into a response structure
-            var response = new
-            {
-                gvar = gvar
-            };
+        //    // Wrap the GVAR object into a response structure
+        //    var response = new
+        //    {
+        //        gvar = gvar
+        //    };
 
-            return Ok(response);
-        }
+        //    return Ok(response);
+        //}
 
 
     }
