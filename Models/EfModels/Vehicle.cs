@@ -16,6 +16,6 @@ public partial class Vehicle
 
 
    // public virtual RouteHistory? RouteHistory { get; set; }
-    public List<RouteHistory> RouteHistories { get; set; } = new List<RouteHistory>();
+    public List<RouteHistory> RouteHistories { get; set; } 
     public virtual ICollection<VehiclesInformation> VehiclesInformations { get; set; } = new List<VehiclesInformation>();
 }

@@ -18,4 +18,5 @@ public partial class VehiclesInformation
     public virtual Driver? Driver { get; set; }
 
     public virtual Vehicle? Vehicle { get; set; }
+
 }

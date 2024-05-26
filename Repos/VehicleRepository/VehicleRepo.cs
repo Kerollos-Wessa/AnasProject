@@ -14,6 +14,7 @@ namespace AnasProject.Repos.VehicleRepository
 
         public List<VehicleDtoGetAll> GetAllVehiclesData()
         {
+
             var vehiclesData = context.Vehicles
                 .Select(v => new
                 {
