@@ -8,7 +8,7 @@
         public int? LastDirection { get; set; }
         public char? LastStatus { get; set; }
         public string? LastAddress { get; set; }
-        public float? LastLatitude { get; set; }
-        public float? LastLongitude { get; set; }
+        public double? LastLatitude { get; set; }
+        public double? LastLongitude { get; set; }
     }
 }

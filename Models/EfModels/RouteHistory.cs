@@ -13,7 +13,7 @@ public partial class RouteHistory
     public string? VehicleSpeed { get; set; }
     public bool IsDeleted { get; set; } = false;
     public long? Epoch { get; set; }
-    public float? Latitude { get; set; }
-    public float? Longitude { get; set; }
+    public double? Latitude { get; set; }
+    public double? Longitude { get; set; }
     public Vehicle Vehicle { get; set; } = null!;
 }

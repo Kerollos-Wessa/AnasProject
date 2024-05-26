@@ -14,13 +14,13 @@ public partial class Geofence
 
     public bool IsDeleted { get; set; } = false;
 
-    public float? StrockOpacity { get; set; }
+    public double? StrockOpacity { get; set; }
 
-    public float? StrockWeight { get; set; }
+    public double? StrockWeight { get; set; }
 
     public string? FillColor { get; set; }
 
-    public float? FillOpacity { get; set; }
+    public double? FillOpacity { get; set; }
 
     public virtual ICollection<CircleGeofence> CircleGeofences { get; set; } = new List<CircleGeofence>();
 

@@ -9,15 +9,15 @@ public partial class RectangleGeofence
 
     public long? GeofenceId { get; set; }
 
-    public float? North { get; set; }
+    public double? North { get; set; }
 
-    public float? East { get; set; }
+    public double? East { get; set; }
 
     public bool IsDeleted { get; set; } = false;
 
-    public float? West { get; set; }
+    public double? West { get; set; }
 
-    public float? South { get; set; }
+    public double? South { get; set; }
 
     public virtual Geofence? Geofence { get; set; }
 }
