@@ -15,7 +15,7 @@ public partial class Vehicle
     public bool IsDeleted { get; set; } = false;
 
 
-    public virtual RouteHistory? RouteHistory { get; set; }
-
+   // public virtual RouteHistory? RouteHistory { get; set; }
+    public List<RouteHistory> RouteHistories { get; set; } = new List<RouteHistory>();
     public virtual ICollection<VehiclesInformation> VehiclesInformations { get; set; } = new List<VehiclesInformation>();
 }
