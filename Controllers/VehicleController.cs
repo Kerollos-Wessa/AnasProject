@@ -146,6 +146,29 @@ namespace AnasProject.Controllers
                 }).ToList()
             };
 
+                var gvar = new GVAR();
+                gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
+                {
+                    ["VehicleId"] = vehicle.VehicleId.ToString(),
+                    ["VehicleNumber"] = vehicle.VehicleNumber.ToString(),
+                    ["VehicleType"] = vehicle.VehicleType.ToString()
+                };
+                var response = new
+                {
+                    gvar = gvar
+                };
+
+                // Return the wrapped response
+                return Ok(response);
+            }
+
+            return BadRequest("Invalid Data For Adding This Driver");
+
+        }
+
+
+        [HttpGet("all-vehicles")]
+        public IActionResult GetAllVehicles()
             return Ok(result);
         }
 
@@ -155,17 +178,32 @@ namespace AnasProject.Controllers
         [HttpGet("all")]
         public IActionResult GetAllDrivers()
         {
-            var vehicles = vehicleRepo.GetAll();
+            var vehiclesData = vehicleRepo.GetAllVehiclesData();
+
+            // Create and populate the DataTable
             var dataTable = new DataTable("Vehicles");
             dataTable.Columns.Add("VehicleId", typeof(long));
             dataTable.Columns.Add("VehicleNumber", typeof(long));
             dataTable.Columns.Add("VehicleType", typeof(string));
+            dataTable.Columns.Add("LastDirection", typeof(int));
+            dataTable.Columns.Add("LastStatus", typeof(char));
+            dataTable.Columns.Add("LastLatitude", typeof(double));
+            dataTable.Columns.Add("LastLongitude", typeof(double));
 
-            foreach (var vehicle in vehicles)
+            foreach (var vehicle in vehiclesData)
             {
-                dataTable.Rows.Add(vehicle.VehicleId, vehicle.VehicleNumber, vehicle.VehicleType);
+                dataTable.Rows.Add(
+                    vehicle.VehicleId,
+                    vehicle.VehicleNumber,
+                    vehicle.VehicleType,
+                    vehicle.LastDirection,
+                    vehicle.LastStatus,
+                    vehicle.LastLatitude,
+                    vehicle.LastLongitude
+                );
             }
 
+            // Assuming GVAR is a class that holds DataTables
             var gvar = new GVAR();
             gvar.AddDataTable("Vehicles", dataTable);
 
@@ -179,6 +217,36 @@ namespace AnasProject.Controllers
         }
         #endregion
 
+
+
+
+
+        // GET: api/drivers/all
+        //[HttpGet("all")]
+        //public IActionResult GetAllDrivers()
+        //{
+        //    var vehicles = vehicleRepo.GetAll();
+        //    var dataTable = new DataTable("Vehicles");
+        //    dataTable.Columns.Add("VehicleId", typeof(long));
+        //    dataTable.Columns.Add("VehicleNumber", typeof(long));
+        //    dataTable.Columns.Add("VehicleType", typeof(string));
+
+        //    foreach (var vehicle in vehicles)
+        //    {
+        //        dataTable.Rows.Add(vehicle.VehicleId, vehicle.VehicleNumber, vehicle.VehicleType);
+        //    }
+
+        //    var gvar = new GVAR();
+        //    gvar.AddDataTable("Vehicles", dataTable);
+
+        //    // Wrap the GVAR object into a response structure
+        //    var response = new
+        //    {
+        //        gvar = gvar
+        //    };
+
+        //    return Ok(response);
+        //}
 
 
     }
