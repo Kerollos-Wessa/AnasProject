@@ -61,24 +61,42 @@ namespace AnasProject.Controllers
         {
             var vehiclesData = vehicleRepo.GetAllVehiclesData();
 
-            // Convert list to a dictionary of dictionaries
-            var result = new Dictionary<string, List<Dictionary<string, object>>>
+            // Create and populate the DataTable
+            var dataTable = new DataTable("Vehicles");
+            dataTable.Columns.Add("VehicleId", typeof(long));
+            dataTable.Columns.Add("VehicleNumber", typeof(long));
+            dataTable.Columns.Add("VehicleType", typeof(string));
+            dataTable.Columns.Add("LastDirection", typeof(int));
+            dataTable.Columns.Add("LastStatus", typeof(char));
+            dataTable.Columns.Add("LastLatitude", typeof(double));
+            dataTable.Columns.Add("LastLongitude", typeof(double));
+
+            foreach (var vehicle in vehiclesData)
             {
-                ["Vehicles"] = vehiclesData.Select(v => new Dictionary<string, object>
+                dataTable.Rows.Add(
+                    vehicle.VehicleId,
+                    vehicle.VehicleNumber,
+                    vehicle.VehicleType,
+                    vehicle.LastDirection,
+                    vehicle.LastStatus,
+                    vehicle.LastLatitude,
+                    vehicle.LastLongitude
+                );
+            }
+
+            // Assuming GVAR is a class that holds DataTables
+            var gvar = new GVAR();
+            gvar.AddDataTable("Vehicles", dataTable);
+
+            // Wrap the GVAR object into a response structure
+            var response = new
             {
-                { "VehicleId", v.VehicleId },
-                { "VehicleNumber", v.VehicleNumber },
-                { "VehicleType", v.VehicleType },
-                { "LastDirection", v.LastDirection },
-                { "LastStatus", v.LastStatus },
-                { "LastAddress", v.LastAddress },
-                { "LastLatitude", v.LastLatitude },
-                { "LastLongitude", v.LastLongitude }
-            }).ToList()
+                gvar = gvar
             };
 
-            return Ok(result);
+            return Ok(response);
         }
+
 
 
     }
