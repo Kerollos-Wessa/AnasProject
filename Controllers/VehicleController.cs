@@ -169,33 +169,5 @@ namespace AnasProject.Controllers
 
 
 
-        // GET: api/drivers/all
-        //[HttpGet("all")]
-        //public IActionResult GetAllDrivers()
-        //{
-        //    var vehicles = vehicleRepo.GetAll();
-        //    var dataTable = new DataTable("Vehicles");
-        //    dataTable.Columns.Add("VehicleId", typeof(long));
-        //    dataTable.Columns.Add("VehicleNumber", typeof(long));
-        //    dataTable.Columns.Add("VehicleType", typeof(string));
-
-        //    foreach (var vehicle in vehicles)
-        //    {
-        //        dataTable.Rows.Add(vehicle.VehicleId, vehicle.VehicleNumber, vehicle.VehicleType);
-        //    }
-
-        //    var gvar = new GVAR();
-        //    gvar.AddDataTable("Vehicles", dataTable);
-
-        //    // Wrap the GVAR object into a response structure
-        //    var response = new
-        //    {
-        //        gvar = gvar
-        //    };
-
-        //    return Ok(response);
-        //}
-
-
     }
 }
