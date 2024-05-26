@@ -103,29 +103,6 @@ namespace AnasProject.Controllers
                 vehicle.IsDeleted = true;
                 vehicleRepo.Update(vehicle);
                 vehicleRepo.Save();
-        [HttpGet("all-vehicles")]
-        public IActionResult GetAllVehicles()
-        {
-            var vehiclesData = vehicleRepo.GetAllVehiclesData();
-
-            // Convert list to a dictionary of dictionaries
-            var result = new Dictionary<string, List<Dictionary<string, object>>>
-            {
-                ["Vehicles"] = vehiclesData.Select(v => new Dictionary<string, object>
-            {
-                { "VehicleId", v.VehicleId },
-                { "VehicleNumber", v.VehicleNumber },
-                { "VehicleType", v.VehicleType },
-                { "LastDirection", v.LastDirection },
-                { "LastStatus", v.LastStatus },
-                { "LastAddress", v.LastAddress },
-                { "LastLatitude", v.LastLatitude },
-                { "LastLongitude", v.LastLongitude }
-            }).ToList()
-            };
-
-            return Ok(result);
-        }
 
                 var gvar = new GVAR();
                 gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
@@ -148,8 +125,33 @@ namespace AnasProject.Controllers
         }
 
 
+        [HttpGet("all-vehicles")]
+        public IActionResult GetAllVehicles()
+        {
+            var vehiclesData = vehicleRepo.GetAllVehiclesData();
+
+            // Convert list to a dictionary of dictionaries
+            var result = new Dictionary<string, List<Dictionary<string, object>>>
+            {
+                    ["Vehicles"] = vehiclesData.Select(v => new Dictionary<string, object>
+                    {
+                    { "VehicleId", v.VehicleId },
+                    { "VehicleNumber", v.VehicleNumber },
+                    { "VehicleType", v.VehicleType },
+                    { "LastDirection", v.LastDirection },
+                    { "LastStatus", v.LastStatus },
+                    { "LastAddress", v.LastAddress },
+                    { "LastLatitude", v.LastLatitude },
+                    { "LastLongitude", v.LastLongitude }
+                }).ToList()
+            };
+
+            return Ok(result);
+        }
 
         // GET: api/drivers/all
+
+        #region Temporary Get
         [HttpGet("all")]
         public IActionResult GetAllDrivers()
         {
@@ -175,6 +177,9 @@ namespace AnasProject.Controllers
 
             return Ok(response);
         }
+        #endregion
+
+
 
     }
 }

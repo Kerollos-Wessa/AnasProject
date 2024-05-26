@@ -6,7 +6,6 @@ namespace AnasProject;
 public partial class Geofence
 {
     public long GeofenceId { get; set; }
-
     public string? GeofenceType { get; set; }
 
     public long? AddedDate { get; set; }

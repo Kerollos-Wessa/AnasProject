@@ -1,5 +1,7 @@
 using AnasProject.Models;
 using AnasProject.Repos.DriverRepository;
+using AnasProject.Repos.RouteHistoryRepository;
+using AnasProject.Repos.VehicleInformationRepository;
 using AnasProject.Repos.VehicleRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,6 +27,9 @@ namespace AnasProject
 
             builder.Services.AddScoped<IDriverRepo, DriverRepo>();
             builder.Services.AddScoped<IVehicleRepo, VehicleRepo>();
+            builder.Services.AddScoped<IVehicleInformationRepo, VehicleInformationRepo>();
+            builder.Services.AddScoped<IRouteHistoryRepo, RouteHistoryRepo>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
