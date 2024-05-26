@@ -18,7 +18,7 @@ namespace AnasProject.Repos
         }
 
 
-        public List<T> GetAll()
+        public virtual List<T> GetAll()
         {
 
             return context.Set<T>().ToList();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AnasProject;
 
@@ -7,6 +8,7 @@ public partial class RouteHistory
 {
     public long RouteHistoryId { get; set; }
 
+    
     public long VehicleId { get; set; }
     public int? VehicleDirection { get; set; }
 
@@ -21,5 +23,5 @@ public partial class RouteHistory
 
     public float? Longitude { get; set; }
 
-    public virtual Vehicle Vehicle { get; set; } = null!;
+    public Vehicle Vehicle { get; set; } = null!;
 }
