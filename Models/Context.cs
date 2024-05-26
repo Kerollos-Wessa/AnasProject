@@ -30,6 +30,7 @@ namespace AnasProject.Models
             //    modelBuilder.Entity(type.Name).Property<bool>("IsDeleted");
             //}
             modelBuilder.Entity<Driver>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<Vehicle>().HasQueryFilter(e => !e.IsDeleted);
 
         }
 

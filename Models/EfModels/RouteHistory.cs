@@ -8,7 +8,6 @@ public partial class RouteHistory
     public long RouteHistoryId { get; set; }
 
     public long VehicleId { get; set; }
-
     public int? VehicleDirection { get; set; }
 
     public char? Status { get; set; }
