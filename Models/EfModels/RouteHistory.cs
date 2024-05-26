@@ -10,7 +10,6 @@ public partial class RouteHistory
 
     
     public long VehicleId { get; set; }
-
     public int? VehicleDirection { get; set; }
 
     public char? Status { get; set; }
