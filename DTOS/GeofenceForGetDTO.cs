@@ -1,7 +1,8 @@
 ﻿namespace AnasProject.DTOS
 {
-    public class GeofenceDTO
+    public class GeofenceForGetDTO
     {
+        public long GeofenceId { get; set; }
         public string GeofenceType { get; set; }
         public long AddedDate { get; set; }
         public string StrockColor { get; set; }

@@ -6,21 +6,21 @@ namespace AnasProject;
 public partial class Geofence
 {
     public long GeofenceId { get; set; }
-    public string? GeofenceType { get; set; }
+    public string GeofenceType { get; set; }
 
-    public long? AddedDate { get; set; }
+    public long AddedDate { get; set; }
 
-    public string? StrockColor { get; set; }
+    public string StrockColor { get; set; }
 
     public bool IsDeleted { get; set; } = false;
 
-    public double? StrockOpacity { get; set; }
+    public double StrockOpacity { get; set; }
 
-    public double? StrockWeight { get; set; }
+    public double StrockWeight { get; set; }
 
-    public string? FillColor { get; set; }
+    public string FillColor { get; set; }
 
-    public double? FillOpacity { get; set; }
+    public double FillOpacity { get; set; }
 
     public virtual ICollection<CircleGeofence> CircleGeofences { get; set; } = new List<CircleGeofence>();
 

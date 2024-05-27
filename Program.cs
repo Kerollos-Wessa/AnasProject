@@ -1,5 +1,9 @@
 using AnasProject.Models;
+using AnasProject.Repos.CircularGeofenceRepository;
 using AnasProject.Repos.DriverRepository;
+using AnasProject.Repos.GeofenceRepository;
+using AnasProject.Repos.PolygonGeofenceRepository;
+using AnasProject.Repos.RectangularGeofenceReopsitory;
 using AnasProject.Repos.RouteHistoryRepository;
 using AnasProject.Repos.VehicleInformationRepository;
 using AnasProject.Repos.VehicleRepository;
@@ -29,6 +33,11 @@ namespace AnasProject
             builder.Services.AddScoped<IVehicleRepo, VehicleRepo>();
             builder.Services.AddScoped<IVehicleInformationRepo, VehicleInformationRepo>();
             builder.Services.AddScoped<IRouteHistoryRepo, RouteHistoryRepo>();
+            builder.Services.AddScoped<IGeofenceRepo, GeofenceRepo>();
+            builder.Services.AddScoped<ICircularGeofenceRepo, CircularGeofenceRepo>();
+            builder.Services.AddScoped<IRectangularGeofenceRepo, RectangularGeofenceRepo>();
+            builder.Services.AddScoped<IPolygonGeofenceRepo, PolygonGeofenceRepo>();
+
 
             var app = builder.Build();
 
