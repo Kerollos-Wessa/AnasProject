@@ -16,8 +16,8 @@ public partial class VehiclesInformation
 
  
     public bool IsDeleted { get; set; } = false;
-    public string? VehicleModel { get; set; }
-    public long? PurchaseDate { get; set; }
+    public string VehicleModel { get; set; }
+    public long PurchaseDate { get; set; }
     public virtual Driver? Driver { get; set; }
     public virtual Vehicle? Vehicle { get; set; }
 
