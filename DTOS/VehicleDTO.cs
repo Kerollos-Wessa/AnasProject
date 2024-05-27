@@ -2,7 +2,7 @@
 {
     public class VehicleDTO
     {
-        public long? VehicleNumber { get; set; }
-        public string? VehicleType { get; set; }
+        public long VehicleNumber { get; set; }
+        public string VehicleType { get; set; }
     }
 }
