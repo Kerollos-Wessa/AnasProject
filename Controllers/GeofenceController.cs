@@ -27,7 +27,7 @@ namespace AnasProject.Controllers
             
             var geofences = geofenceRepo.GetAll();
             var dataTable = new DataTable("Geofences");
-            dataTable.Columns.Add("GeofenceId", typeof(long));
+            dataTable.Columns.Add("Id", typeof(long));
             dataTable.Columns.Add("GeofenceType", typeof(string));
             dataTable.Columns.Add("AddedDate", typeof(long));
             dataTable.Columns.Add("StrockColor", typeof(string));
@@ -40,7 +40,7 @@ namespace AnasProject.Controllers
             {
                 dataTable.Rows.Add(
                     // Highlighted Change: Ensure GeofenceId is correctly added as long
-                    geofence.GeofenceId,
+                    geofence.Id,
                     geofence.GeofenceType,
                     geofence.AddedDate,
                     geofence.StrockColor,
@@ -90,7 +90,7 @@ namespace AnasProject.Controllers
                 var gvar = new GVAR();
                 gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
                 {
-                    ["GeofenceId"] = geofence.GeofenceId.ToString(),
+                    ["Id"] = geofence.Id.ToString(),
                     ["GeofenceType"] = geofence.GeofenceType.ToString(),
                     ["AddedDate"] = geofence.AddedDate.ToString(),
                     ["StrockWeight"] = geofence.StrockWeight.ToString(),

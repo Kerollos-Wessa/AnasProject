@@ -33,10 +33,14 @@ namespace AnasProject.Models
             modelBuilder.Entity<Vehicle>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<VehiclesInformation>().HasQueryFilter(e => !e.IsDeleted);
             modelBuilder.Entity<RouteHistory>().HasQueryFilter(e => !e.IsDeleted);
+            modelBuilder.Entity<Geofence>()
+        .HasDiscriminator<string>("Discriminator")
+        .HasValue<Geofence>("Geofence")
+        .HasValue<CircleGeofence>("CircleGeofence")
+        .HasValue<PolygonGeofence>("PolygonGeofence")
+        .HasValue<RectangleGeofence>("RectangleGeofence");
+
             modelBuilder.Entity<Geofence>().HasQueryFilter(e => !e.IsDeleted);
-            modelBuilder.Entity<RectangleGeofence>().HasQueryFilter(e => !e.IsDeleted);
-            modelBuilder.Entity<PolygonGeofence>().HasQueryFilter(e => !e.IsDeleted);
-            modelBuilder.Entity<CircleGeofence>().HasQueryFilter(e => !e.IsDeleted);
 
         }
 

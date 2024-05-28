@@ -47,7 +47,6 @@ namespace AnasProject.Controllers
                     ["VehicleMake"] = vehiclesInformation.VehicleMake,
                     ["PurchaseDate"] = vehiclesInformation.PurchaseDate.ToString(),
                     ["VehicleModel"] = vehiclesInformation.VehicleModel
-
                 };
 
                 // Wrap the GVAR object into a response structure

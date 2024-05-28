@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AnasProject.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240527050503_double")]
-    partial class @double
+    [Migration("20240528181557_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,36 +24,6 @@ namespace AnasProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("AnasProject.CircleGeofence", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<long>("GeofenceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Longitude")
-                        .HasColumnType("float");
-
-                    b.Property<long>("Radius")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GeofenceId");
-
-                    b.ToTable("CircleGeofences");
-                });
 
             modelBuilder.Entity("AnasProject.Driver", b =>
                 {
@@ -79,50 +49,62 @@ namespace AnasProject.Migrations
 
             modelBuilder.Entity("AnasProject.Geofence", b =>
                 {
-                    b.Property<long>("GeofenceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("GeofenceId"));
-
-                    b.Property<long?>("AddedDate")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("FillColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("FillOpacity")
-                        .HasColumnType("float");
-
-                    b.Property<string>("GeofenceType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("StrockColor")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("StrockOpacity")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("StrockWeight")
-                        .HasColumnType("float");
-
-                    b.HasKey("GeofenceId");
-
-                    b.ToTable("Geofences");
-                });
-
-            modelBuilder.Entity("AnasProject.PolygonGeofence", b =>
-                {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
 
-                    b.Property<long>("GeofenceId")
+                    b.Property<long>("AddedDate")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
+
+                    b.Property<string>("FillColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("FillOpacity")
+                        .HasColumnType("float");
+
+                    b.Property<string>("GeofenceType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("StrockColor")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<double>("StrockOpacity")
+                        .HasColumnType("float");
+
+                    b.Property<double>("StrockWeight")
+                        .HasColumnType("float");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Geofences");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Geofence");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("AnasProject.RouteHistory", b =>
+                {
+                    b.Property<long>("RouteHistoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RouteHistoryId"));
+
+                    b.Property<long>("Epoch")
                         .HasColumnType("bigint");
 
                     b.Property<bool>("IsDeleted")
@@ -134,76 +116,18 @@ namespace AnasProject.Migrations
                     b.Property<double>("Longitude")
                         .HasColumnType("float");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("GeofenceId");
-
-                    b.ToTable("PolygonGeofences");
-                });
-
-            modelBuilder.Entity("AnasProject.RectangleGeofence", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"));
-
-                    b.Property<double>("East")
-                        .HasColumnType("float");
-
-                    b.Property<long>("GeofenceId")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double>("North")
-                        .HasColumnType("float");
-
-                    b.Property<double>("South")
-                        .HasColumnType("float");
-
-                    b.Property<double>("West")
-                        .HasColumnType("float");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GeofenceId");
-
-                    b.ToTable("RectangleGeofences");
-                });
-
-            modelBuilder.Entity("AnasProject.RouteHistory", b =>
-                {
-                    b.Property<long>("RouteHistoryId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("RouteHistoryId"));
-
-                    b.Property<long?>("Epoch")
-                        .HasColumnType("bigint");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("float");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("float");
-
                     b.Property<string>("Status")
+                        .IsRequired()
                         .HasColumnType("nvarchar(1)");
 
-                    b.Property<int?>("VehicleDirection")
+                    b.Property<int>("VehicleDirection")
                         .HasColumnType("int");
 
                     b.Property<long>("VehicleId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("VehicleSpeed")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("RouteHistoryId");
@@ -224,10 +148,11 @@ namespace AnasProject.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("VehicleNumber")
+                    b.Property<long>("VehicleNumber")
                         .HasColumnType("bigint");
 
                     b.Property<string>("VehicleType")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("VehicleId");
@@ -249,7 +174,7 @@ namespace AnasProject.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<long?>("PurchaseDate")
+                    b.Property<long>("PurchaseDate")
                         .HasColumnType("bigint");
 
                     b.Property<long?>("VehicleId")
@@ -259,6 +184,7 @@ namespace AnasProject.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("VehicleModel")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -272,35 +198,83 @@ namespace AnasProject.Migrations
 
             modelBuilder.Entity("AnasProject.CircleGeofence", b =>
                 {
-                    b.HasOne("AnasProject.Geofence", "Geofence")
-                        .WithMany("CircleGeofences")
-                        .HasForeignKey("GeofenceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("AnasProject.Geofence");
 
-                    b.Navigation("Geofence");
+                    b.Property<long?>("GeofenceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.Property<long>("Radius")
+                        .HasColumnType("bigint");
+
+                    b.HasIndex("GeofenceId");
+
+                    b.HasDiscriminator().HasValue("CircleGeofence");
                 });
 
             modelBuilder.Entity("AnasProject.PolygonGeofence", b =>
                 {
-                    b.HasOne("AnasProject.Geofence", "Geofence")
-                        .WithMany("PolygonGeofences")
-                        .HasForeignKey("GeofenceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("AnasProject.Geofence");
 
-                    b.Navigation("Geofence");
+                    b.Property<long?>("GeofenceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("Latitude")
+                        .HasColumnType("float");
+
+                    b.Property<double>("Longitude")
+                        .HasColumnType("float");
+
+                    b.HasIndex("GeofenceId");
+
+                    b.ToTable("Geofences", t =>
+                        {
+                            t.Property("GeofenceId")
+                                .HasColumnName("PolygonGeofence_GeofenceId");
+
+                            t.Property("Latitude")
+                                .HasColumnName("PolygonGeofence_Latitude");
+
+                            t.Property("Longitude")
+                                .HasColumnName("PolygonGeofence_Longitude");
+                        });
+
+                    b.HasDiscriminator().HasValue("PolygonGeofence");
                 });
 
             modelBuilder.Entity("AnasProject.RectangleGeofence", b =>
                 {
-                    b.HasOne("AnasProject.Geofence", "Geofence")
-                        .WithMany("RectangleGeofences")
-                        .HasForeignKey("GeofenceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasBaseType("AnasProject.Geofence");
 
-                    b.Navigation("Geofence");
+                    b.Property<double>("East")
+                        .HasColumnType("float");
+
+                    b.Property<long?>("GeofenceId")
+                        .HasColumnType("bigint");
+
+                    b.Property<double>("North")
+                        .HasColumnType("float");
+
+                    b.Property<double>("South")
+                        .HasColumnType("float");
+
+                    b.Property<double>("West")
+                        .HasColumnType("float");
+
+                    b.HasIndex("GeofenceId");
+
+                    b.ToTable("Geofences", t =>
+                        {
+                            t.Property("GeofenceId")
+                                .HasColumnName("RectangleGeofence_GeofenceId");
+                        });
+
+                    b.HasDiscriminator().HasValue("RectangleGeofence");
                 });
 
             modelBuilder.Entity("AnasProject.RouteHistory", b =>
@@ -327,6 +301,27 @@ namespace AnasProject.Migrations
                     b.Navigation("Driver");
 
                     b.Navigation("Vehicle");
+                });
+
+            modelBuilder.Entity("AnasProject.CircleGeofence", b =>
+                {
+                    b.HasOne("AnasProject.Geofence", null)
+                        .WithMany("CircleGeofences")
+                        .HasForeignKey("GeofenceId");
+                });
+
+            modelBuilder.Entity("AnasProject.PolygonGeofence", b =>
+                {
+                    b.HasOne("AnasProject.Geofence", null)
+                        .WithMany("PolygonGeofences")
+                        .HasForeignKey("GeofenceId");
+                });
+
+            modelBuilder.Entity("AnasProject.RectangleGeofence", b =>
+                {
+                    b.HasOne("AnasProject.Geofence", null)
+                        .WithMany("RectangleGeofences")
+                        .HasForeignKey("GeofenceId");
                 });
 
             modelBuilder.Entity("AnasProject.Driver", b =>
