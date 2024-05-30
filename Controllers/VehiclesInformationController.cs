@@ -1,9 +1,7 @@
 ﻿using AnasProject.DTOS;
 using AnasProject.Repos.VehicleInformationRepository;
 using AnasProject.Repos.VehicleRepository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Concurrent;
 using System.Data;
 using System.Globalization;
@@ -26,69 +24,58 @@ namespace AnasProject.Controllers
         {
             if (ModelState.IsValid)
             {
-                // Parse the string date to DateTime
-                DateTime purchaseDate;
-                if (!DateTime.TryParseExact(vehiclesInformationDTO.PurchaseDate, "yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out purchaseDate))
-                {
-                    return BadRequest("Invalid date format. Expected format: yyyy-MM-ddTHH:mm:ssZ");
-                }
+                var purchaseDateUnix = FormattedStringToUnixTimeStamp(vehiclesInformationDTO.PurchaseDate.ToString());
 
                 VehiclesInformation vehiclesInformation = new VehiclesInformation()
                 {
                     DriverId = vehiclesInformationDTO.DriverId,
                     VehicleId = vehiclesInformationDTO.VehicleId,
                     VehicleMake = vehiclesInformationDTO.VehicleMake,
-                    PurchaseDate = vehiclesInformationDTO.PurchaseDate, // Store as string
+                    PurchaseDate = purchaseDateUnix.ToString(),
                     VehicleModel = vehiclesInformationDTO.VehicleModel
                 };
 
-                // Add the vehicle information to the database
                 vehicleInformationRepo.Insert(vehiclesInformation);
                 vehicleInformationRepo.Save();
 
-                // Create a GVAR object and populate the DicOfDic with vehicle data
                 var gvar = new GVAR();
                 gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
                 {
                     ["DriverId"] = vehiclesInformation.DriverId.ToString(),
                     ["VehicleId"] = vehiclesInformation.VehicleId.ToString(),
                     ["VehicleMake"] = vehiclesInformation.VehicleMake,
-                    ["PurchaseDate"] = purchaseDate.ToString("dddd, MMMM dd, yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                    ["PurchaseDate"] = UnixTimeStampToFormattedString(long.Parse(vehiclesInformation.PurchaseDate)),
                     ["VehicleModel"] = vehiclesInformation.VehicleModel
                 };
 
-                // Wrap the GVAR object into a response structure
                 var response = new
                 {
                     gvar = gvar
                 };
 
-                // Return the wrapped response
                 return Ok(response);
             }
 
             return BadRequest("Invalid Data For Adding This Vehicle");
         }
 
-        [HttpPut("Update")]
-        public IActionResult UpdateVechileInformation(int vehicleInformationId, VehiclesInformationDTO vehiclesInformationDTO)
+        [HttpPut("update")]
+        public IActionResult UpdateVechileInformation(int vehicleInformationId, [FromBody] VehiclesInformationDTO vehiclesInformationDTO)
         {
             if (ModelState.IsValid)
             {
                 VehiclesInformation vehiclesInformation = vehicleInformationRepo.GetById(vehicleInformationId);
 
-                // Parse the string date to DateTime
-                DateTime purchaseDate;
-                if (!DateTime.TryParseExact(vehiclesInformationDTO.PurchaseDate, "yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out purchaseDate))
+                if (vehiclesInformation == null)
                 {
-                    return BadRequest("Invalid date format. Expected format: yyyy-MM-ddTHH:mm:ssZ");
+                    return NotFound("Vehicle information not found.");
                 }
 
                 vehiclesInformation.VehicleId = vehiclesInformationDTO.VehicleId;
                 vehiclesInformation.DriverId = vehiclesInformationDTO.DriverId;
                 vehiclesInformation.VehicleMake = vehiclesInformationDTO.VehicleMake;
                 vehiclesInformation.VehicleModel = vehiclesInformationDTO.VehicleModel;
-                vehiclesInformation.PurchaseDate = vehiclesInformationDTO.PurchaseDate; // Store as string
+                vehiclesInformation.PurchaseDate = FormattedStringToUnixTimeStamp(vehiclesInformationDTO.PurchaseDate).ToString();
 
                 vehicleInformationRepo.Update(vehiclesInformation);
                 vehicleInformationRepo.Save();
@@ -99,7 +86,7 @@ namespace AnasProject.Controllers
                     ["DriverId"] = vehiclesInformation.DriverId.ToString(),
                     ["VehicleId"] = vehiclesInformation.VehicleId.ToString(),
                     ["VehicleMake"] = vehiclesInformation.VehicleMake,
-                    ["PurchaseDate"] = purchaseDate.ToString("dddd, MMMM dd, yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                    ["PurchaseDate"] = UnixTimeStampToFormattedString(long.Parse(vehiclesInformation.PurchaseDate)),
                     ["VehicleModel"] = vehiclesInformation.VehicleModel
                 };
 
@@ -108,29 +95,27 @@ namespace AnasProject.Controllers
                     gvar = gvar
                 };
 
-                // Return the wrapped response
                 return Ok(response);
             }
 
             return BadRequest("Invalid Data For Updating This Vehicle");
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete("delete")]
         public IActionResult DeleteInformation(long vehicleInformationId)
         {
             if (ModelState.IsValid)
             {
                 VehiclesInformation vehiclesInformation = vehicleInformationRepo.GetById(vehicleInformationId);
+
+                if (vehiclesInformation == null)
+                {
+                    return NotFound("Vehicle information not found.");
+                }
+
                 vehiclesInformation.IsDeleted = true;
                 vehicleInformationRepo.Update(vehiclesInformation);
                 vehicleInformationRepo.Save();
-
-                // Parse the string date to DateTime
-                DateTime purchaseDate;
-                if (!DateTime.TryParseExact(vehiclesInformation.PurchaseDate, "yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out purchaseDate))
-                {
-                    return BadRequest("Invalid date format. Expected format: yyyy-MM-ddTHH:mm:ssZ");
-                }
 
                 var gvar = new GVAR();
                 gvar.DicOfDic["Tags"] = new ConcurrentDictionary<string, string>
@@ -138,7 +123,7 @@ namespace AnasProject.Controllers
                     ["DriverId"] = vehiclesInformation.DriverId.ToString(),
                     ["VehicleId"] = vehiclesInformation.VehicleId.ToString(),
                     ["VehicleMake"] = vehiclesInformation.VehicleMake,
-                    ["PurchaseDate"] = purchaseDate.ToString("dddd, MMMM dd, yyyy hh:mm:ss tt", CultureInfo.InvariantCulture),
+                    ["PurchaseDate"] = UnixTimeStampToFormattedString(long.Parse(vehiclesInformation.PurchaseDate)),
                     ["VehicleModel"] = vehiclesInformation.VehicleModel
                 };
 
@@ -147,7 +132,6 @@ namespace AnasProject.Controllers
                     gvar = gvar
                 };
 
-                // Return the wrapped response
                 return Ok(response);
             }
 
@@ -159,6 +143,11 @@ namespace AnasProject.Controllers
         {
             var vehicleDataInformation = vehicleInformationRepo.GetVehicleInformationData(vehicleId);
 
+            if (vehicleDataInformation == null)
+            {
+                return NotFound("Vehicle information not found.");
+            }
+
             var dataTable = new DataTable("VehicleInformation");
             dataTable.Columns.Add("VehicleNumber", typeof(long));
             dataTable.Columns.Add("VehicleType", typeof(string));
@@ -168,26 +157,16 @@ namespace AnasProject.Controllers
             dataTable.Columns.Add("VehicleMake", typeof(string));
             dataTable.Columns.Add("VehicleModel", typeof(string));
             dataTable.Columns.Add("PhoneNumber", typeof(string));
-            dataTable.Columns.Add("PurchaseDate", typeof(string));
 
-            if (vehicleDataInformation != null)
-            {
-                //DateTime purchaseDate;
-                //if (DateTime.TryParseExact(vehicleDataInformation.PurchaseDate, "yyyy-MM-ddTHH:mm:ssZ", CultureInfo.InvariantCulture, DateTimeStyles.None, out purchaseDate))
-                //{
-                    dataTable.Rows.Add(
-                        vehicleDataInformation.VehicleNumber,
-                        vehicleDataInformation.VehicleType,
-                        vehicleDataInformation.DriverName,
-                        vehicleDataInformation.LastLatitude,
-                        vehicleDataInformation.LastLongitude,
-                        vehicleDataInformation.VehicleMake,
-                        vehicleDataInformation.VehicleModel,
-                        vehicleDataInformation.PhoneNumber
-                        //purchaseDate.ToString("dddd, MMMM dd, yyyy hh:mm:ss tt", CultureInfo.InvariantCulture)
-                    );
-                
-            }
+            dataTable.Rows.Add(
+                vehicleDataInformation.VehicleNumber,
+                vehicleDataInformation.VehicleType,
+                vehicleDataInformation.DriverName,
+                vehicleDataInformation.LastLatitude,
+                vehicleDataInformation.LastLongitude,
+                vehicleDataInformation.VehicleMake,
+                vehicleDataInformation.VehicleModel,
+                vehicleDataInformation.PhoneNumber);
 
             var gvar = new GVAR();
             gvar.AddDataTable("VehicleInformation", dataTable);
@@ -198,6 +177,22 @@ namespace AnasProject.Controllers
             };
 
             return Ok(response);
+        }
+
+        private string UnixTimeStampToFormattedString(long unixTimeStamp)
+        {
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp);
+            dateTimeOffset = dateTimeOffset.ToOffset(TimeSpan.FromHours(3)); // Adjust the time zone if necessary
+            return dateTimeOffset.ToString("dddd, MMMM d, yyyy h:mm:ss tt", CultureInfo.InvariantCulture);
+        }
+
+        private long FormattedStringToUnixTimeStamp(string formattedString)
+        {
+            DateTimeOffset dateTimeOffset = DateTimeOffset.ParseExact(
+                formattedString,
+                "dddd, MMMM d, yyyy h:mm:ss tt",
+                CultureInfo.InvariantCulture);
+            return dateTimeOffset.ToUnixTimeSeconds();
         }
     }
 }

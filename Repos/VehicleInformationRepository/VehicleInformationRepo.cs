@@ -1,5 +1,6 @@
 ﻿using AnasProject.DTOS;
 using AnasProject.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace AnasProject.Repos.VehicleInformationRepository
 {
@@ -11,7 +12,7 @@ namespace AnasProject.Repos.VehicleInformationRepository
             context = _context;
         }
 
-       public VehiclesInformationForGetAllDTO GetVehicleInformationData(long vehicleId)
+        public VehiclesInformationForGetAllDTO GetVehicleInformationData(long vehicleId)
         {
             var vehicleInformationData = context.VehiclesInformations
                 .Where(v => v.VehicleId == vehicleId)
@@ -34,12 +35,12 @@ namespace AnasProject.Repos.VehicleInformationRepository
                 {
                     VehicleNumber = v.Vehicle?.VehicleNumber,
                     DriverName = v.Driver?.DriverName,
-                    LastLongitude = v.LastRouteHistory.Longitude,
+                    LastLongitude = v.LastRouteHistory?.Longitude,
                     VehicleMake = v.VehicleMake,
                     VehicleModel = v.VehicleModel,
                     PhoneNumber = v.Driver?.PhoneNumber,
                     VehicleType = v.Vehicle?.VehicleType,
-                    LastLatitude = v.LastRouteHistory.Latitude,
+                    LastLatitude = v.LastRouteHistory?.Latitude,
                 })
                 .FirstOrDefault();
 
@@ -47,5 +48,5 @@ namespace AnasProject.Repos.VehicleInformationRepository
         }
 
 
-            }
+    }
         }
