@@ -10,10 +10,10 @@
         //public long? LastGPSTime { get; set; }
         //public string? LastAddress { get; set; }
 
-        public double? LastLatitude { get; set; }
-        public double? LastLongitude { get; set; }
-        public string? VehicleMake { get; set; }
-        public string? VehicleModel { get; set; }
+        public double LastLatitude { get; set; }
+        public double LastLongitude { get; set; }
+        public string VehicleMake { get; set; }
+        public string VehicleModel { get; set; }
         public string PhoneNumber { get; set; }
 
 

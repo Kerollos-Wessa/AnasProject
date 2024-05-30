@@ -34,12 +34,12 @@ namespace AnasProject.Repos.VehicleInformationRepository
                 {
                     VehicleNumber = v.Vehicle?.VehicleNumber,
                     DriverName = v.Driver?.DriverName,
-                    LastLongitude = v.LastRouteHistory?.Longitude,
+                    LastLongitude = v.LastRouteHistory.Longitude,
                     VehicleMake = v.VehicleMake,
                     VehicleModel = v.VehicleModel,
                     PhoneNumber = v.Driver?.PhoneNumber,
                     VehicleType = v.Vehicle?.VehicleType,
-                    LastLatitude = v.LastRouteHistory?.Latitude,
+                    LastLatitude = v.LastRouteHistory.Latitude,
                 })
                 .FirstOrDefault();
 

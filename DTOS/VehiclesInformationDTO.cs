@@ -10,6 +10,6 @@
         //public long?	LastGPSTime { get; set; }
 
         public string VehicleModel { get; set; }
-        public long PurchaseDate { get; set; }
+        public string PurchaseDate { get; set; }
     }
 }
