@@ -27,7 +27,7 @@ namespace AnasProject.Controllers
             dataTable.Columns.Add("Radius", typeof(long));
             dataTable.Columns.Add("Latitude", typeof(double));
             dataTable.Columns.Add("Longitude", typeof(double));
-            dataTable.Columns.Add("AddedDate", typeof(long));
+            dataTable.Columns.Add("AddedDate", typeof(string));
             dataTable.Columns.Add("GeofenceType", typeof(string));
             dataTable.Columns.Add("FillColor", typeof(string));
             dataTable.Columns.Add("FillOpacity", typeof(double));
@@ -42,7 +42,7 @@ namespace AnasProject.Controllers
                     geofence.Radius,
                     geofence.Latitude,
                     geofence.Longitude,
-                    geofence.AddedDate,
+                    UnixTimeStampToFormattedString(long.Parse(geofence.AddedDate)),
                     geofence.GeofenceType,
                     geofence.FillColor,
                     geofence.FillOpacity,
@@ -74,7 +74,7 @@ namespace AnasProject.Controllers
                     Radius = circularGeofenceDTO.Radius,
                     Latitude = circularGeofenceDTO.Latitude,
                     Longitude = circularGeofenceDTO.Longitude,
-                    AddedDate = circularGeofenceDTO.AddedDate,
+                    AddedDate = FormattedStringToUnixTimeStamp(circularGeofenceDTO.AddedDate).ToString(),
                     FillColor = circularGeofenceDTO.FillColor,
                     FillOpacity = circularGeofenceDTO.FillOpacity,
                     GeofenceType = circularGeofenceDTO.GeofenceType,
@@ -93,7 +93,7 @@ namespace AnasProject.Controllers
                     ["Radius"] = Circlegeofence.Radius.ToString(),
                     ["Latitude"] = Circlegeofence.Latitude.ToString(),
                     ["Longitude"] = Circlegeofence.Longitude.ToString(),
-                    ["AddedDate"] = Circlegeofence.AddedDate.ToString(),
+                    ["AddedDate"] = UnixTimeStampToFormattedString(long.Parse(Circlegeofence.AddedDate)),
                     ["FillColor"] = Circlegeofence.FillColor.ToString(),
                     ["FillOpacity"] = Circlegeofence.FillOpacity.ToString(),
                     ["GeofenceType"] = Circlegeofence.GeofenceType.ToString(),
@@ -111,6 +111,24 @@ namespace AnasProject.Controllers
             }
 
             return BadRequest("Invalid Data For Adding This Geofence");
+        }
+
+        private string UnixTimeStampToFormattedString(long unixTimeStamp)
+        {
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp);
+            // Adjust the time zone if necessary, e.g., to GMT+03:00 DST
+            dateTimeOffset = dateTimeOffset.ToOffset(TimeSpan.FromHours(3));
+            return dateTimeOffset.ToString("dddd, MMMM d, yyyy h:mm:ss tt");
+        }
+
+        private long FormattedStringToUnixTimeStamp(string formattedString)
+        {
+            // Assuming the input format is "Thursday, May 30, 2024 11:10:15 AM"
+            DateTimeOffset dateTimeOffset = DateTimeOffset.ParseExact(
+                formattedString,
+                "dddd, MMMM d, yyyy h:mm:ss tt",
+                System.Globalization.CultureInfo.InvariantCulture);
+            return dateTimeOffset.ToUnixTimeSeconds();
         }
     }
 }

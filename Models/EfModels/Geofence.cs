@@ -8,7 +8,7 @@ public partial class Geofence
     public long Id { get; set; }
     public string GeofenceType { get; set; }
 
-    public long AddedDate { get; set; }
+    public string AddedDate { get; set; }
 
     public string StrockColor { get; set; }
 

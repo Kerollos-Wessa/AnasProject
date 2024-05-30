@@ -1,6 +1,5 @@
 ﻿using AnasProject.DTOS;
 using AnasProject.Repos.RectangularGeofenceReopsitory;
-using AnasProject.Repos.RectangularGeofenceReopsitory;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Concurrent;
@@ -28,7 +27,7 @@ namespace AnasProject.Controllers
             dataTable.Columns.Add("West", typeof(double));
             dataTable.Columns.Add("East", typeof(double));
             dataTable.Columns.Add("South", typeof(double));
-            dataTable.Columns.Add("AddedDate", typeof(long));
+            dataTable.Columns.Add("AddedDate", typeof(string));
             dataTable.Columns.Add("GeofenceType", typeof(string));
             dataTable.Columns.Add("FillColor", typeof(string));
             dataTable.Columns.Add("StrokeOpacity", typeof(double));
@@ -43,7 +42,7 @@ namespace AnasProject.Controllers
                     geofence.West,
                     geofence.East,
                     geofence.South,
-                    geofence.AddedDate,
+                    UnixTimeStampToFormattedString(long.Parse(geofence.AddedDate)),
                     geofence.GeofenceType,
                     geofence.FillColor,
                     geofence.StrockOpacity,
@@ -75,7 +74,7 @@ namespace AnasProject.Controllers
                     West = rectangularGeofenceDTO.West,
                     East = rectangularGeofenceDTO.East,
                     South = rectangularGeofenceDTO.South,
-                    AddedDate = rectangularGeofenceDTO.AddedDate,
+                    AddedDate = FormattedStringToUnixTimeStamp(rectangularGeofenceDTO.AddedDate).ToString(),
                     FillColor = rectangularGeofenceDTO.FillColor,
                     FillOpacity = rectangularGeofenceDTO.FillOpacity,
                     GeofenceType = rectangularGeofenceDTO.GeofenceType,
@@ -95,7 +94,7 @@ namespace AnasProject.Controllers
                     ["West"] = rectangleGeofence.West.ToString(),
                     ["East"] = rectangleGeofence.East.ToString(),
                     ["South"] = rectangleGeofence.South.ToString(),
-                    ["AddedDate"] = rectangleGeofence.AddedDate.ToString(),
+                    ["AddedDate"] = UnixTimeStampToFormattedString(long.Parse(rectangleGeofence.AddedDate)),
                     ["FillColor"] = rectangleGeofence.FillColor,
                     ["FillOpacity"] = rectangleGeofence.FillOpacity.ToString(),
                     ["GeofenceType"] = rectangleGeofence.GeofenceType,
@@ -113,6 +112,24 @@ namespace AnasProject.Controllers
             }
 
             return BadRequest("Invalid Data For Adding This Driver");
+        }
+
+        private string UnixTimeStampToFormattedString(long unixTimeStamp)
+        {
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp);
+            // Adjust the time zone if necessary, e.g., to GMT+03:00 DST
+            dateTimeOffset = dateTimeOffset.ToOffset(TimeSpan.FromHours(3));
+            return dateTimeOffset.ToString("dddd, MMMM d, yyyy h:mm:ss tt");
+        }
+
+        private long FormattedStringToUnixTimeStamp(string formattedString)
+        {
+            // Assuming the input format is "Thursday, May 30, 2024 11:10:15 AM"
+            DateTimeOffset dateTimeOffset = DateTimeOffset.ParseExact(
+                formattedString,
+                "dddd, MMMM d, yyyy h:mm:ss tt",
+                System.Globalization.CultureInfo.InvariantCulture);
+            return dateTimeOffset.ToUnixTimeSeconds();
         }
     }
 }

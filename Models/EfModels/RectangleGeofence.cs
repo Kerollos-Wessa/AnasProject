@@ -11,5 +11,5 @@ public partial class RectangleGeofence : Geofence
     public double West { get; set; }
     public double South { get; set; }
 
-
+    
 }

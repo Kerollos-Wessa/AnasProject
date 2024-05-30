@@ -27,7 +27,7 @@ namespace AnasProject.Controllers
             dataTable.Columns.Add("Id", typeof(long));
             dataTable.Columns.Add("Longitude", typeof(double));
             dataTable.Columns.Add("Latitude", typeof(double));
-            dataTable.Columns.Add("AddedDate", typeof(long));
+            dataTable.Columns.Add("AddedDate", typeof(string));
             dataTable.Columns.Add("GeofenceType", typeof(string));
             dataTable.Columns.Add("FillColor", typeof(string));
             dataTable.Columns.Add("StrockOpacity", typeof(double));
@@ -41,7 +41,7 @@ namespace AnasProject.Controllers
                     geofence.Id,
                     geofence.Longitude,
                     geofence.Latitude,
-                    geofence.AddedDate,
+                    UnixTimeStampToFormattedString(long.Parse(geofence.AddedDate)),
                     geofence.GeofenceType,
                     geofence.FillColor,
                     geofence.StrockOpacity,
@@ -71,7 +71,7 @@ namespace AnasProject.Controllers
                 {
                     Longitude = polygonGeofenceDTO.Longitude,
                     Latitude = polygonGeofenceDTO.Latitude,
-                    AddedDate = polygonGeofenceDTO.AddedDate,
+                    AddedDate = FormattedStringToUnixTimeStamp(polygonGeofenceDTO.AddedDate).ToString(),
                     FillColor = polygonGeofenceDTO.FillColor,
                     FillOpacity = polygonGeofenceDTO.FillOpacity,
                     GeofenceType = polygonGeofenceDTO.GeofenceType,
@@ -89,7 +89,7 @@ namespace AnasProject.Controllers
                     ["Id"] = polygonGeofence.Id.ToString(),
                     ["Longitude"] = polygonGeofence.Longitude.ToString(),
                     ["Latitude"] = polygonGeofence.Latitude.ToString(),
-                    ["AddedDate"] = polygonGeofence.AddedDate.ToString(),
+                    ["AddedDate"] = UnixTimeStampToFormattedString(long.Parse(polygonGeofence.AddedDate)),
                     ["FillColor"] = polygonGeofence.FillColor,
                     ["FillOpacity"] = polygonGeofence.FillOpacity.ToString(),
                     ["GeofenceType"] = polygonGeofence.GeofenceType,
@@ -107,6 +107,24 @@ namespace AnasProject.Controllers
             }
 
             return BadRequest("Invalid Data For Adding This Geofence");
+        }
+
+        private string UnixTimeStampToFormattedString(long unixTimeStamp)
+        {
+            DateTimeOffset dateTimeOffset = DateTimeOffset.FromUnixTimeSeconds(unixTimeStamp);
+            // Adjust the time zone if necessary, e.g., to GMT+03:00 DST
+            dateTimeOffset = dateTimeOffset.ToOffset(TimeSpan.FromHours(3));
+            return dateTimeOffset.ToString("dddd, MMMM d, yyyy h:mm:ss tt");
+        }
+
+        private long FormattedStringToUnixTimeStamp(string formattedString)
+        {
+            // Assuming the input format is "Thursday, May 30, 2024 11:10:15 AM"
+            DateTimeOffset dateTimeOffset = DateTimeOffset.ParseExact(
+                formattedString,
+                "dddd, MMMM d, yyyy h:mm:ss tt",
+                System.Globalization.CultureInfo.InvariantCulture);
+            return dateTimeOffset.ToUnixTimeSeconds();
         }
     }
 }
